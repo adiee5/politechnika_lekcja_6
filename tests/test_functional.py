@@ -31,3 +31,4 @@ def test_tax():
     manager = Manager(Parameters())
 
     assert manager.get_tax(2025, 1, 0.085) == 638
+    assert manager.get_tax(2020, 1, 0.23) == 1725

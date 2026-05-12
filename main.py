@@ -1,5 +1,7 @@
 from src.manager import Manager
-from src.models import Parameters
+from src.models import Parameters, ApartmentSettlement
+
+import sys
 
 
 def print_section_header(title: str):
@@ -62,6 +64,22 @@ def display_tenants(manager):
                 month_year = f"{transfer.settlement_month}/{transfer.settlement_year}" if transfer.settlement_month and transfer.settlement_year else "N/A"
                 print(f"      • {format_currency(transfer.amount_pln):>15}  Date: {transfer.date}  Period: {month_year}")
 
+def display_settlement(settlement: ApartmentSettlement|None):
+    print_section_header("SETTLEMENT FROM COMMAND-LINE")
+    if settlement==None:
+        print("This settlement doesn't exist")
+
+    print(f"\n🤝 {settlement.key}")
+
+    total_due_pln: float
+    total_transfers_pln: float = 0.0
+    balance_pln: float = 0.0
+    print(f"   Apartment: {settlement.apartment}")
+    print(f"   Year: {settlement.year}")
+    print(f"   Month: {settlement.month}")
+    print(f"   Total Due: {format_currency(settlement.total_due_pln)}")
+    print(f"   Total Transfers: {format_currency(settlement.total_transfers_pln)}")
+    print(f"   Balance: {format_currency(settlement.balance_pln)}")
 
 if __name__ == '__main__':
     parameters = Parameters()
@@ -69,5 +87,8 @@ if __name__ == '__main__':
 
     display_apartments(manager)
     display_tenants(manager)
+
+    if len(sys.argv)>=1+3:
+        display_settlement(manager.get_settlement(sys.argv[1], int(sys.argv[2]), int(sys.argv[3])))
     
     print(f"\n{'=' * 70}\n")
